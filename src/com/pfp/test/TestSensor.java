@@ -2,6 +2,7 @@ package com.pfp.test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class TestSensor {
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
 		ArrayList<String> sen = new ArrayList<>(
-				List.of("_", "_", "_", "-", "-")
+				Arrays.asList("_", "_", "_", "-", "-")
 		);
 		
 		LinkedList<Character> str = new LinkedList<>();

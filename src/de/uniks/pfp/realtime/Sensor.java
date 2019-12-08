@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class SensorTest implements Runnable {
+public class Sensor implements Runnable {
 
 	String name;
 	
@@ -42,7 +42,7 @@ public class SensorTest implements Runnable {
 	final Lock lock = new ReentrantLock();
 	
 	// initialize and activate a sensor with default values
-	public SensorTest(String name) {
+	public Sensor(String name) {
 		this.name = name;
 		this.tick = SAMPLINGFREQUENCY; // set default sample frequency
 		System.out.println(name + ": activated");
@@ -50,7 +50,7 @@ public class SensorTest implements Runnable {
 	}
 	
 	// sets a custom sample frequency
-	public SensorTest(String name, int sampleFrequency) {
+	public Sensor(String name, int sampleFrequency) {
 		this(name);
 		if (sampleFrequency > 0)
 			tick = sampleFrequency;
@@ -105,7 +105,7 @@ public class SensorTest implements Runnable {
 		// TODO Auto-generated method stub
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
-		SensorTest sen = new SensorTest("S1");
+		Sensor sen = new Sensor("S1");
 
 		executor.execute(sen);
 		
@@ -147,7 +147,7 @@ public class SensorTest implements Runnable {
 			
 			@Override
 			public void run() {
-				SensorTest local = sen;
+				Sensor local = sen;
 				while(!local.checkSensorState(10, false)) {
 					System.out.println("Sensor was not 10 ticks off.");
 					try {
