@@ -1,4 +1,4 @@
-package com.pfp.environment;
+package de.uniks.pfp.init;
 
 public class Motor {
 

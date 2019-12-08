@@ -1,4 +1,4 @@
-package com.pfp.exception;
+package de.uniks.pfp.init.exceptions;
 
 public class IllegalTypeException extends Exception {
 

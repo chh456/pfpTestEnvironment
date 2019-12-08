@@ -1,7 +1,7 @@
 package com.pfp.test;
 
-import com.pfp.environment.*;
-import com.pfp.exception.*;
+import de.uniks.pfp.init.*;
+import de.uniks.pfp.init.exceptions.*;
 
 public class Test {
 	

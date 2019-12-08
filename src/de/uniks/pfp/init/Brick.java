@@ -1,12 +1,13 @@
-package com.pfp.environment;
+package de.uniks.pfp.init;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.pfp.exception.BrickInitException;
-import com.pfp.exception.IllegalPortException;
-import com.pfp.exception.IllegalTypeException;
+import de.uniks.pfp.init.exceptions.BrickInitException;
+import de.uniks.pfp.init.exceptions.IllegalPortException;
+import de.uniks.pfp.init.exceptions.IllegalTypeException;
 
 public class Brick {
 
@@ -17,7 +18,7 @@ public class Brick {
 	
 	// types
 	static ArrayList<Character> m_types = new ArrayList<>(
-			List.of('M', 'L')
+			Arrays.asList('M', 'L')
 	);
 	
 	static ArrayList<String> s_types = new ArrayList<>(
@@ -26,10 +27,10 @@ public class Brick {
 	
 	// ports
 	static ArrayList<String> m_ports = new ArrayList<>(
-			List.of("A", "B", "C", "D")
+			Arrays.asList("A", "B", "C", "D")
 	);
 	static ArrayList<String> s_ports = new ArrayList<>(
-			List.of("S1", "S2", "S3", "S4")
+			Arrays.asList("S1", "S2", "S3", "S4")
 	);
 	
 	// connectivity

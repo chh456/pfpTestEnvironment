@@ -1,6 +1,6 @@
 package com.pfp.test;
 
-import com.pfp.environment.InterfaceTest;
+import de.uniks.pfp.init.InterfaceTest;
 
 public interface IFace extends InterfaceTest {
 
