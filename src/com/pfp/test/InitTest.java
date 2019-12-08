@@ -3,10 +3,10 @@ package com.pfp.test;
 import de.uniks.pfp.init.*;
 import de.uniks.pfp.init.exceptions.*;
 
-public class Test {
+public class InitTest {
 	
 	static public void main(String[] args) {
-
+	
 		Brick b = null;
 		try {
 			b = new Brick("192.168.0.1");

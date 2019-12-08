@@ -36,10 +36,14 @@ public class Sensor implements Runnable {
 	// this list will keep track of the time this sensor changed it's state
 	private ArrayList<Long> stateChanges = new ArrayList<>();
 	
-	// default time sensor checks for new states in ms
+	// default sample frequency in ms
 	private static int SAMPLINGFREQUENCY = 200; 	
 	
-	final Lock lock = new ReentrantLock();
+	// for statistical issues
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SS");
+	
+	// TODO
+	// final Lock lock = new ReentrantLock();
 	
 	// initialize and activate a sensor with default values
 	public Sensor(String name) {
@@ -49,15 +53,13 @@ public class Sensor implements Runnable {
 		activated = true;
 	}
 	
-	// sets a custom sample frequency
+	// sets a custom sample frequency. be careful especially in production environment!
 	public Sensor(String name, int sampleFrequency) {
 		this(name);
 		if (sampleFrequency > 0)
 			tick = sampleFrequency;
 	}
-	
-	// ignore. this will be used in a gui later.
-	private PropertyChangeSupport changes = new PropertyChangeSupport(this);
+
 	
 	// checks whether sensor was in sensorState (on|off) over timeFrame ticks
 	synchronized public boolean checkSensorState(int timeFrame, boolean sensorState) {
@@ -68,18 +70,7 @@ public class Sensor implements Runnable {
 		// timeFrame exceeds sensor's runtime
 		if (timeFrame > sensorHistory.size()) return false;
 		
-		/*
-		// get sensor's last states and check whether all of them are the desired sensorState
-		Boolean lastState = sensorHistory.getLast();
-		int counter = 0;
-		while (lastState != null && counter < timeFrame) { // null can't happen by design but w/e 
-			if (lastState != sensorState) return false;
-			lastState = sensorHistory.getLast();
-			counter++;
-		} */
-		
-		// lock.lock();
-		
+		// we copy the list so we don't have to care about concurrency issues		
 		LinkedList<Boolean> localList = new LinkedList<Boolean>(sensorHistory);
 		
 		// we get the last (timeFrame) states of the sensor's history
@@ -89,13 +80,11 @@ public class Sensor implements Runnable {
 		while(it.hasNext())
 			if (it.next() != sensorState) return false; // if one of them is not the desired sensorState return false.
 		
-		// lock.unlock();
-		
 		// sensor was in sensorState over timeFrame ticks
 		return true; 
 	}
 	
-	// default
+	// default: check whether sensor was on for timeFrame ticks
 	public boolean checkSensorState(int timeFrame) {
 		return checkSensorState(timeFrame, true);
 	}
@@ -103,121 +92,15 @@ public class Sensor implements Runnable {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ExecutorService executor = Executors.newCachedThreadPool();
-		
-		Sensor sen = new Sensor("S1");
 
-		executor.execute(sen);
-		
-// System.out.println(Thread.currentThread().getName());
-
-
-		boolean b = true;
-		// while(b);
-
-		Runnable r1 = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(2000);
-					// System.out.println("Changing impulse");
-					sen.impulse = true;
-					Thread.sleep(3000);
-					// System.out.println("Changing impulse");
-					sen.impulse = false;
-					Thread.sleep(1000);
-					
-					sen.impulse = true;
-					Thread.sleep(2000);
-					sen.impulse = false;
-					Thread.sleep(100);					
-					
-					sen.activated = false;
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		executor.execute(r1);
-		
-		Runnable r2 = new Runnable() {
-
-			long startTime = System.currentTimeMillis();
-			
-			@Override
-			public void run() {
-				Sensor local = sen;
-				while(!local.checkSensorState(10, false)) {
-					System.out.println("Sensor was not 10 ticks off.");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-				long accomplishedIn = System.currentTimeMillis() - startTime;
-				
-				System.out.println("Sensor off 10 ticks after " + accomplishedIn / 1000 + " seconds.");
-				
-			}
-			
-		};
-		
-		executor.execute(r2);
-		
-		Runnable r3 = new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				while (!sen.checkSensorState(5, true)) {
-					System.out.println("Sensor was not 5 ticks on.");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				System.out.println("Sensor was on for 5 ticks.");
-			}
-			
-		};
-		
-		executor.execute(r3);
-		
-		
-		LinkedList<String> test = new LinkedList<>();
-		test.add("hans");
-		test.add("hans2");
-		test.add("hans3");
-		test.add("hans4");
-		test.add("hans5");
-		System.out.println(test.getLast());
-		System.out.println(test.getLast());
-		
-		ListIterator it = test.listIterator(test.size() - 2);
-		while(it.hasNext())
-			System.out.println(it.next());
-		
-		ListIterator it2 = test.listIterator(test.size() - 5);
-		while(it2.hasNext())
-			System.out.println(it2.next());
-		
-		executor.shutdown();
 	}
 
 	@Override
 	public void run() {
-		
-		System.out.print(name + ": ");
-		
+
 		// we save the startTime when this sensor was started
 		startTime = System.currentTimeMillis();
-		
+			
 		while (activated) {
 			// System.out.print(impulse ? '-' : '_');
 			if (impulse())
@@ -234,32 +117,29 @@ public class Sensor implements Runnable {
 		endTime = System.currentTimeMillis();
 		
 		// print some stats. this will happen in a different method later.
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm:ss");
-		
-		System.out.println("Sensor started at " + sdf.format(startTime));
+		System.out.println("Sensor " + name + ": Activated " + sdf.format(startTime) + " in Thread " + Thread.currentThread().getName());
 		
 		boolean startState = false;
 		
+		// iterate over stateChanges 
 		for (Long timeStateChanged : stateChanges) {
-			System.out.println("Sensor went from " + startState + " to " + !startState + " at " + sdf.format(timeStateChanged));
-			// startState = startState ? !startState : startState;
-			if (startState)
-				startState = false;
-			else
-				startState = true;
+			System.out.println(name + " went from " + startState + " to " + !startState + " at " + sdf.format(timeStateChanged));
+			startState = (startState ? false : true); // toggle startState
 		}
-		System.out.println("Sensor shutdown at " + sdf.format(endTime));
 		
-		
-		
-		System.out.println("\n" + name + ": shutdown");
-
+		System.out.println("Sensor " + name + ": Shutdown at " + sdf.format(endTime));
 		
 	}
 	
-	private void propertyChanged() {
 
+	
+	// returns the current value of the sensor
+	public boolean getSensorState() {
+		return sensorHistory.getLast();
+	}
+	
+	public void setSensorState(Boolean state) {
+		impulse = state;
 	}
 
 	// in the test environment this function will add an impulse to sensor's state history
@@ -276,6 +156,18 @@ public class Sensor implements Runnable {
 		return impulse;
 	}
 
+	public void deactivate() {
+		activated = false;
+	}	
+	
+	// ignore. this will be used in a gui later.
+	private void propertyChanged() {
+
+	}
+	
+	// ignore
+	private PropertyChangeSupport changes = new PropertyChangeSupport(this);	
+	
 	// ignore
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		changes.addPropertyChangeListener(l);
@@ -285,6 +177,5 @@ public class Sensor implements Runnable {
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		changes.removePropertyChangeListener(l);
 	}
-
 	
 }
