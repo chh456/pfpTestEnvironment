@@ -43,7 +43,7 @@ public class Sensor implements Runnable {
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SS");
 	
 	// TODO
-	// final Lock lock = new ReentrantLock();
+	final Lock lock = new ReentrantLock();
 	
 	// initialize and activate a sensor with default values
 	public Sensor(String name) {
@@ -53,7 +53,7 @@ public class Sensor implements Runnable {
 		activated = true;
 	}
 	
-	// sets a custom sample frequency. be careful especially in production environment!
+	// sets a custom sample frequency. be careful especially in productive environment!
 	public Sensor(String name, int sampleFrequency) {
 		this(name);
 		if (sampleFrequency > 0)
@@ -70,6 +70,8 @@ public class Sensor implements Runnable {
 		// timeFrame exceeds sensor's runtime
 		if (timeFrame > sensorHistory.size()) return false;
 		
+		lock.lock();
+		
 		// we copy the list so we don't have to care about concurrency issues		
 		LinkedList<Boolean> localList = new LinkedList<Boolean>(sensorHistory);
 		
@@ -80,6 +82,8 @@ public class Sensor implements Runnable {
 		while(it.hasNext())
 			if (it.next() != sensorState) return false; // if one of them is not the desired sensorState return false.
 		
+		lock.unlock();
+		
 		// sensor was in sensorState over timeFrame ticks
 		return true; 
 	}
@@ -87,12 +91,6 @@ public class Sensor implements Runnable {
 	// default: check whether sensor was on for timeFrame ticks
 	public boolean checkSensorState(int timeFrame) {
 		return checkSensorState(timeFrame, true);
-	}
-	
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -108,8 +106,10 @@ public class Sensor implements Runnable {
 			try {
 				Thread.sleep(SAMPLINGFREQUENCY);
 			} catch (InterruptedException e) {
-
-				e.printStackTrace();
+				// at this point our thread pool tries to interrupt because the sensor was not shut down
+				activated = false;
+				break;
+				// e.printStackTrace();
 			}
 		}
 		

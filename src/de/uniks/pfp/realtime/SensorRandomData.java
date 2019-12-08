@@ -40,7 +40,7 @@ public class SensorRandomData implements Runnable {
 			
 		}
 		sensor.setSensorState(!lastState);
-		sensor.deactivate();
+		
 	}
 	
 	// default stateChanges

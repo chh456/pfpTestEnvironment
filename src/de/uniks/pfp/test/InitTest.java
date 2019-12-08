@@ -1,4 +1,4 @@
-package com.pfp.test;
+package de.uniks.pfp.test;
 
 import de.uniks.pfp.exceptions.*;
 import de.uniks.pfp.init.*;

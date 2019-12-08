@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 // import de.uniks.pfp.init.Sensor;
 
@@ -166,8 +167,28 @@ public class StartHere {
 		executor.execute(motor2);
 		executor.execute(motor3);
 
+		
+		
 		// Der Executor läuft normalerweise bis alle Threads beendet sind. Wir können ihm auch sagen nach einer gewissen Zeit allen Threads ein interrupt zu senden.
 		executor.shutdown();
+		
+		// Kann ignoriert werden. An der Stelle sind die Sensoren noch aktiv aber wir haben versucht den Threadpool runterzufahren.			
+		try {
+			if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+				for (Runnable r : executor.shutdownNow())
+					System.out.println("killed" + r.toString()); // Cancel currently executing tasks
+
+			// Normalerweise sollte er hier 60 Sekunden warten 
+		       if (executor.awaitTermination(60, TimeUnit.SECONDS))
+		           System.err.println("Pool did not terminate");
+		     }
+		   } catch (InterruptedException ie) {
+		     // (Re-)Cancel if current thread also interrupted
+		     executor.shutdownNow();
+		     // Preserve interrupt status
+		     Thread.currentThread().interrupt();
+		   }
+		
 	}
 
 	public static void printInfo(long start, long end, String thread) {
