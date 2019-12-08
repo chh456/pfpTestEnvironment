@@ -1,4 +1,4 @@
-package de.uniks.pfp.init.exceptions;
+package de.uniks.pfp.exceptions;
 
 public class IllegalPortException extends Exception {
 

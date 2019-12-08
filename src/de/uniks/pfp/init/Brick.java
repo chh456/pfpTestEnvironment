@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import de.uniks.pfp.init.exceptions.BrickInitException;
-import de.uniks.pfp.init.exceptions.IllegalPortException;
-import de.uniks.pfp.init.exceptions.IllegalTypeException;
+import de.uniks.pfp.exceptions.BrickInitException;
+import de.uniks.pfp.exceptions.IllegalPortException;
+import de.uniks.pfp.exceptions.IllegalTypeException;
 
 public class Brick {
 
