@@ -49,7 +49,7 @@ public class Sensor implements Runnable {
 	public Sensor(String name) {
 		this.name = name;
 		this.tick = SAMPLINGFREQUENCY; // set default sample frequency
-		System.out.println(name + ": activated");
+		System.out.println("Sensor " + name + ": activate");
 		activated = true;
 	}
 	
@@ -108,6 +108,7 @@ public class Sensor implements Runnable {
 			} catch (InterruptedException e) {
 				// at this point our thread pool tries to interrupt because the sensor was not shut down
 				activated = false;
+				System.out.println("Sensor " + name + ": Unexpected shutdown");
 				break;
 				// e.printStackTrace();
 			}

@@ -59,7 +59,7 @@ public class StartHere {
 		Runnable motor1 = new Runnable() {
 			
 			/* Wir erstellen ein Runnable Objekt mithilfe einer anonymen Klasse vom Typ Runnable und überschreiben 
-			 * ihre run()-Methode. Das geht mit jedem Objekt und Klasse die nicht als final deklariert worden sind.
+			 * ihre run()-Methode. Das geht mit jedem Objekt und jeder Klasse die nicht als final deklariert worden sind.
 			 * 
 			 * 		Sensor test = new Sensor("", "", "") {
 						@Override
@@ -88,7 +88,7 @@ public class StartHere {
 					// syso STRG + LEERTASTE "ich warte"
 					try {
 						Thread.sleep(200);
-						/* Wenn wir hier den Thread nicht schlafen lassen, fragt eher alle paar Nanosekunden beim Sensor
+						/* Wenn wir hier den Thread nicht schlafen lassen, fragt er alle paar Nanosekunden beim Sensor
 						 * an ob sich was geändert hat. Das heißt der Wert ist neben der SAMPLEFREQUENCY/tick im Sensor
 						 * einer der Flaschenhälse. In unserem Produktivsystem muss der Wert nicht allzu klein gewählt werden.
 						 */
@@ -178,10 +178,9 @@ public class StartHere {
 				for (Runnable r : executor.shutdownNow())
 					System.out.println("killed" + r.toString()); // Cancel currently executing tasks
 
-			// Normalerweise sollte er hier 60 Sekunden warten 
-		       if (executor.awaitTermination(60, TimeUnit.SECONDS))
-		           System.err.println("Pool did not terminate");
-		     }
+			if (executor.awaitTermination(60, TimeUnit.SECONDS))
+		           System.err.println("Threadpool was shut down");
+		    }
 		   } catch (InterruptedException ie) {
 		     // (Re-)Cancel if current thread also interrupted
 		     executor.shutdownNow();
