@@ -36,6 +36,8 @@ public class Sensor implements Runnable {
 	// this list will keep track of the time this sensor changed it's state
 	private ArrayList<Long> stateChanges = new ArrayList<>();
 	
+	private ArrayList<SensorListener> registeredMotors = new ArrayList<>();
+	
 	// default sample frequency in ms
 	private static int SAMPLINGFREQUENCY = 200; 	
 	
@@ -159,11 +161,19 @@ public class Sensor implements Runnable {
 
 	public void deactivate() {
 		activated = false;
-	}	
+	}
+	
+	public void registerMotor(SensorListener s) {
+		if (!registeredMotors.contains(s))
+			registeredMotors.add(s);
+	}
+	
 	
 	// ignore. this will be used in a gui later.
 	private void propertyChanged() {
-
+		for (SensorListener s : registeredMotors) {
+			s.sensorImpulse(true);
+		}
 	}
 	
 	// ignore

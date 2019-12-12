@@ -162,10 +162,14 @@ public class StartHere {
 			
 		};
 		
-		// Wir starten beide Motoren.
+		Motor m = new Motor();
+		drehTischSensor.registerMotor(m);
+		
+		// Wir starten alle Motoren.
 		executor.execute(motor1);
 		executor.execute(motor2);
 		executor.execute(motor3);
+		executor.execute(m);
 
 		
 		
