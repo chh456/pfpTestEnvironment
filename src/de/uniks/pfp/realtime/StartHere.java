@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 // import de.uniks.pfp.init.Sensor;
 
-/* In dieser Klasse können Motoren in Abhängigkeit von Sensorendaten getestet werden. Das
- * sieht auf den ersten Blick sehr kompliziert aus. 
+/* In dieser Klasse kÃ¶nnen Motoren in AbhÃ¤ngigkeit von Sensorendaten getestet werden. Das
+ * sieht auf den ersten Blick sehr kompliziert aus. Ist es aber gar nicht.
  * 
  * Kommentarsprache in den Klassen ist generell Englisch
  * 
@@ -22,10 +22,10 @@ public class StartHere {
 	
 	public static void main(String[] args) {
 		
-		// Wir erstellen einen ExecutorService der uns Threads zur Verfügung stellt
+		// Wir erstellen einen ExecutorService der uns Threads zur VerfÃ¼gung stellt
 		ExecutorService executor = Executors.newCachedThreadPool();
 		/* Generell zu dem Dienst: neben Klassen die das Interface Runnable implementieren, kann
-		 * der Dienst auch Thread-Objekte, Callables, Futures, usw ausführen.  
+		 * der Dienst auch Thread-Objekte, Callables, Futures, usw ausfÃ¼hren.  
 		 */
 		
 		// Zwei Sensoren
@@ -34,10 +34,10 @@ public class StartHere {
 		
 		// SensorRandomData gibt dem Sensor Impulse. Im Produktivsystem lesen wir direkt von den Sensoren.
 		
-		// Für den Drehtischsensor verwenden wir die Standardwerte. Nachzulesen in der Klasse selbst unter init().
+		// FÃ¼r den Drehtischsensor verwenden wir die Standardwerte. Nachzulesen in der Klasse selbst unter init().
 		SensorRandomData s1rnd = new SensorRandomData(drehTischSensor, null);
 		
-		// Beim Einspeisesensor wollen wir dass er nach 5 Sekunden für 10 Sekunden an ist.
+		// Beim Einspeisesensor wollen wir dass er nach 5 Sekunden fÃ¼r 10 Sekunden an ist.
 		ArrayList<Integer> changes = new ArrayList<>();
 		changes.add(5000);
 		changes.add(10000);
@@ -55,10 +55,10 @@ public class StartHere {
 		// In welchem Thread sind wir an der Stelle?
 		System.out.println("Wir sind in Thread: " + Thread.currentThread().getName());
 		
-		// Wir bauen uns einen Motor. Das ist nur ein Beispiel und läßt sich auf viele verschiedene Arten erreichen.
+		// Wir bauen uns einen Motor. Das ist nur ein Beispiel und lÃ¤ÃŸt sich auf viele verschiedene Arten erreichen.
 		Runnable motor1 = new Runnable() {
 			
-			/* Wir erstellen ein Runnable Objekt mithilfe einer anonymen Klasse vom Typ Runnable und überschreiben 
+			/* Wir erstellen ein Runnable Objekt mithilfe einer anonymen Klasse vom Typ Runnable und Ã¼berschreiben 
 			 * ihre run()-Methode. Das geht mit jedem Objekt und jeder Klasse die nicht als final deklariert worden sind.
 			 * 
 			 * 		Sensor test = new Sensor("", "", "") {
@@ -80,7 +80,7 @@ public class StartHere {
 				// TODO: motor objekt initialisieren usw
 				
 				/* Pseudo:
-				 * Nimm ein RMIRegulatedMotor-Objekt oder eine selbst erstellte Klasse die über eines dieser Objekte verfügt, 
+				 * Nimm ein RMIRegulatedMotor-Objekt oder eine selbst erstellte Klasse die Ã¼ber eines dieser Objekte verfÃ¼gt, 
 				 * setze die Geschwindigkeit des Motors auf x und lass dann den Motor rotieren..
 				 */
 				
@@ -89,8 +89,8 @@ public class StartHere {
 					try {
 						Thread.sleep(200);
 						/* Wenn wir hier den Thread nicht schlafen lassen, fragt er alle paar Nanosekunden beim Sensor
-						 * an ob sich was geändert hat. Das heißt der Wert ist neben der SAMPLEFREQUENCY/tick im Sensor
-						 * einer der Flaschenhälse. In unserem Produktivsystem muss der Wert nicht allzu klein gewählt werden.
+						 * an ob sich was geÃ¤ndert hat. Das heiÃŸt der Wert ist neben der SAMPLEFREQUENCY/tick im Sensor
+						 * einer der FlaschenhÃ¤lse. In unserem Produktivsystem muss der Wert nicht allzu klein gewÃ¤hlt werden.
 						 */
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -137,7 +137,7 @@ public class StartHere {
 		
 		};
 		
-		// Wir bauen einen Motor der unabhängig von Sensoren für eine Sekunde rotiert
+		// Wir bauen einen Motor der unabhÃ¤ngig von Sensoren fÃ¼r eine Sekunde rotiert
 		Runnable motor3 = new Runnable() {
 		
 			@Override
@@ -173,7 +173,7 @@ public class StartHere {
 
 		
 		
-		// Der Executor läuft normalerweise bis alle Threads beendet sind. Wir können ihm auch sagen nach einer gewissen Zeit allen Threads ein interrupt zu senden.
+		// Der Executor lÃ¤uft normalerweise bis alle Threads beendet sind. Wir kÃ¶nnen ihm auch sagen nach einer gewissen Zeit allen Threads ein interrupt zu senden.
 		executor.shutdown();
 		
 		// Kann ignoriert werden. An der Stelle sind die Sensoren noch aktiv aber wir haben versucht den Threadpool runterzufahren.			
